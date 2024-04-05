@@ -1,20 +1,15 @@
 [package]
-authors = [
-    "Kartik Sharma <kartik.sharma522@gmail.com>",
-    "Ajeet D'Souza <98ajeet@gmail.com>",
-]
-description = "Extract partitions from Android OTA files"
-categories = ["command-line-utilities", "android"]
-edition = "2021"
-keywords = ["android", "cli", "terminal"]
-license = "MIT"
 name = "otadump"
-repository = "https://github.com/crazystylus/otadump"
-readme = "README.md"
-rust-version = "1.68.0"
 version = "0.1.2"
+description = "A Tauri App"
+authors = ["you"]
+edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[build-dependencies]
+prost-build = "0.11.0"
+tauri-build = { version = "1.5.1", features = [] }
 
 [dependencies]
 anyhow = "1.0.69"
@@ -31,8 +26,11 @@ nom-derive = "0.10.1"
 prost = "0.11.8"
 rayon = "1.7.0"
 rust-lzma = { version = "0.6.0", features = ["static"] }
+serde = { version = "1.0.197", features = ["derive"] }
+serde_json = "1.0.115"
 sha2 = "0.10.6"
 sync-unsafe-cell = "0.1.0"
+tauri = { version = "1.6.1", features = ["dialog-open", "shell-open"] }
 tempfile = "3.6.0"
 zip = { version = "0.6.6", features = [
     "deflate",
@@ -40,11 +38,12 @@ zip = { version = "0.6.6", features = [
     "zstd",
 ], default-features = false }
 
-[build-dependencies]
-prost-build = "0.11.0"
-
 [profile.release]
 codegen-units = 1
 debug = 0
 lto = true
 strip = true
+
+[features]
+# This feature is used for production builds or when a dev server is not specified, DO NOT REMOVE!!
+custom-protocol = ["tauri/custom-protocol"]
