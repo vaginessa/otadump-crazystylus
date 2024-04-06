@@ -16,6 +16,10 @@ version = "0.1.2"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[build-dependencies]
+prost-build = "0.11.0"
+tauri-build = { version = "1.5.1", features = [] }
+
 [dependencies]
 anyhow = "1.0.69"
 bzip2 = { version = "0.4.4", features = ["static"] }
@@ -31,8 +35,11 @@ nom-derive = "0.10.1"
 prost = "0.11.8"
 rayon = "1.7.0"
 rust-lzma = { version = "0.6.0", features = ["static"] }
+serde = { version = "1.0.197", features = ["derive"] }
+serde_json = "1.0.115"
 sha2 = "0.10.6"
 sync-unsafe-cell = "0.1.0"
+tauri = { version = "1.6.1", features = ["dialog-open", "shell-open"] }
 tempfile = "3.6.0"
 zip = { version = "0.6.6", features = [
     "deflate",
@@ -40,11 +47,12 @@ zip = { version = "0.6.6", features = [
     "zstd",
 ], default-features = false }
 
-[build-dependencies]
-prost-build = "0.11.0"
-
 [profile.release]
 codegen-units = 1
 debug = 0
 lto = true
 strip = true
+
+[features]
+# This feature is used for production builds or when a dev server is not specified, DO NOT REMOVE!!
+custom-protocol = ["tauri/custom-protocol"]
