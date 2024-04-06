@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import {
   Button,
@@ -12,6 +12,7 @@ import {
   webLightTheme,
 } from "@fluentui/react-components";
 import { open } from "@tauri-apps/api/dialog";
+import { Event, listen } from "@tauri-apps/api/event";
 
 type Message = Progress | Error | Completed;
 
@@ -30,6 +31,16 @@ type Completed = {
 };
 
 function App() {
+  useEffect(() => {
+    const unlisten = listen("reporter", (e) => {
+      console.log(e.payload);
+    });
+
+    return () => {
+      unlisten.then((f) => f());
+    };
+  }, []);
+
   const [inputFile, setInputFile] = useState("");
   const [outputDir, setOutputDir] = useState("");
 
@@ -126,6 +137,9 @@ function App() {
 
       <Button
         appearance="primary"
+        disabled={
+          inputFile.trim().length === 0 || outputDir.trim().length === 0
+        }
         onClick={() => {
           invoke("extract", {
             payloadFile: inputFile,
